@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, NonNullableFormBuilder, Validators} from '@angular/forms';
+import {createPasswordStrengthValidator} from '../validators/password-strength.validator';
 
 
 @Component({
@@ -8,8 +10,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginReactiveComponent implements OnInit {
 
+  form: FormGroup = this.fb.group({
+    email: ['', { // string | null
+      validators: [Validators.required, Validators.email],
+      updateOn: 'blur'
+    }],
+    /*email: this.fb.nonNullable.control("",{
+      validators: [Validators.required, Validators.email],
+      updateOn: 'blur'
+    }),*/
+    password: ['', [Validators.required, Validators.minLength(8), createPasswordStrengthValidator()]]
+  });
 
-  constructor() {
+
+
+  constructor(private fb: NonNullableFormBuilder) {
 
 
   }
@@ -18,4 +33,22 @@ export class LoginReactiveComponent implements OnInit {
 
   }
 
+  get email(){
+    return this.form.controls['email'];
+  }
+
+  get password(){
+    return this.form.controls['password'];
+  }
+
+
+  login() {
+    const formValue = this.form.value;
+
+  }
+
+  reset() {
+    this.form.reset();
+    console.log(this.form.value);
+  }
 }
